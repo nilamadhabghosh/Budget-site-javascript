@@ -87,7 +87,7 @@ var BudgetContoller = (function(){
                 totalInc : data.totals.inc,
                 totalExp : data.totals.exp,
                 percentage : data.percentage
-            }
+            };
         }
     }
 })();
@@ -102,10 +102,11 @@ var UIController = (function(){
         addButton : '.add__btn',
         incomeContainer : '.income__list',
         expenseContainer: '.expenses__list',
-        budgetLabel : 'budget__value',
-        incomeLabel : 'budget__income--value',
-        expenseLabel : 'budget__expenses--value',
-        percentageLabel : 'budget__expenses--percentage'
+        budgetLabel : '.budget__value',
+        incomeLabel : '.budget__income--value',
+        expenseLabel : '.budget__expenses--value',
+        percentageLabel : '.budget__expenses--percentage',
+        container : '.container'
     };
 
     return {
@@ -164,7 +165,14 @@ var UIController = (function(){
             document.querySelector(DOMString.budgetLabel).textContent = obj.budget;
             document.querySelector(DOMString.incomeLabel).textContent = obj.totalInc;
             document.querySelector(DOMString.expenseLabel).textContent = obj.totalExp;
-            document.querySelector(DOMString.percentageLabel).textContent = obj.percentage;
+            
+            if(obj.percentage > 0){
+                document.querySelector(DOMString.percentageLabel).textContent = obj.percentage + '%';
+
+            } else {
+                document.querySelector(DOMString.percentageLabel).textContent = '----';
+
+            }
         },
 
             getDOMstring : function(){
@@ -191,7 +199,10 @@ var controller = (function(budgetctrl,UIctrl){
         }
     });
 
-    }
+    document.querySelector(DOM.container).addEventListener('click', ctrldeleteItem);
+
+    };
+
     
     var updatebudget = function(){
 
@@ -202,9 +213,11 @@ var controller = (function(budgetctrl,UIctrl){
         var budget = budgetctrl.getBudget();
 
         //Display the budget on UI
-        UIController.displaybudget(budget);
+        UIctrl.displaybudget(budget);
       
     };
+
+
 
     var ctrlAddItem = function(){
          
@@ -229,9 +242,33 @@ var controller = (function(budgetctrl,UIctrl){
         }
     }
 
+    var ctrldeleteItem = function(event){
+         var itemId,splitId,id;
+
+         itemId = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+         if(itemId){
+             splitId = itemId.split('-');
+             type = splitId[0];
+             id=splitId[1];
+
+             //delete item from data structure
+                
+             //delete from UI
+             
+             //update new budget
+         }
+    };
+
     return{
         init : function(){
             console.log("application Start");
+            UIctrl.displaybudget({
+               budget : 0,
+               totalInc : 0,
+               totalExp : 0,
+               percentage : -1
+            });
             setupEventListner();
         }
     }
